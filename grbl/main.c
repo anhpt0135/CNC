@@ -21,6 +21,7 @@
 
 #include "grbl.h"
 
+uint8_t SPINDLE_ENABLE_PORT = 0;
 
 // Declare system global variable structure
 system_t sys;

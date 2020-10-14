@@ -319,7 +319,9 @@ void st_go_idle()
 ISR(TIMER1_COMPA_vect)
 {
   if (busy) { return; } // The busy-flag is used to avoid reentering this interrupt
-
+  if(SPINDLE_ENABLE_PORT){
+	  SPINDLE_ENABLE_PORT_R = SPINDLE_ENABLE_PORT_R ^ (SPINDLE_ENABLE_PORT);
+  }
   // Set the direction pins a couple of nanoseconds before we step the steppers
   DIRECTION_PORT = (DIRECTION_PORT & ~DIRECTION_MASK) | (st.dir_outbits & DIRECTION_MASK);
   #ifdef ENABLE_DUAL_AXIS
