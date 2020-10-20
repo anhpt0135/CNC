@@ -48,10 +48,35 @@ void spindle_init()
     #ifndef ENABLE_DUAL_AXIS
       SPINDLE_DIRECTION_DDR |= (1<<SPINDLE_DIRECTION_BIT); // Configure as output pin.
     #endif
+
+      //Setup Timer2 to fire every 1ms
+//      TCCR2B = 0x00;        //Disbale Timer2 while we set it up
+//      TCNT2  = 130;         //Reset Timer Count to 130 out of 255
+//      TIFR2  = 0x00;        //Timer2 INT Flag Reg: Clear Timer Overflow Flag
+//      TIMSK2 = 0x01;        //Timer2 INT Reg: Timer2 Overflow Interrupt Enable
+//      TCCR2A = 0x00;        //Timer2 Control Reg A: Wave Gen Mode normal
+//      TCCR2B = 0x05;        //Timer2 Control Reg B: Timer Prescaler set to 128
+
   #endif
 
   spindle_stop();
 }
+
+int count_step = 0;
+
+//Timer2 Overflow Interrupt Vector, called every 1ms
+//ISR(TIMER2_OVF_vect) {
+//// Enable stepper drivers.
+//  if (bit_istrue(settings.flags,BITFLAG_INVERT_ST_ENABLE)) { STEPPERS_DISABLE_PORT |= (1<<STEPPERS_DISABLE_BIT); }
+//  else { STEPPERS_DISABLE_PORT &= ~(1<<STEPPERS_DISABLE_BIT); }
+//  if(count_step % 20 == 0){
+//	  SPINDLE_DIRECTION_PORT |= (1<<SPINDLE_DIRECTION_BIT);
+//	  SPINDLE_ENABLE_PORT_R ^= (1<<SPINDLE_ENABLE_BIT);
+//  }
+//  count_step++;
+//  TCNT2 = 130;           //Reset Timer to 130 out of 255
+//  TIFR2 = 0x00;          //Timer2 INT Flag Reg: Clear Timer Overflow Flag
+//};
 
 
 uint8_t spindle_get_state()

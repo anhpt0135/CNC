@@ -109,7 +109,7 @@
     // Define spindle enable and spindle direction output pins.
     #define SPINDLE_ENABLE_DDR    DDRB
 //    #define SPINDLE_ENABLE_PORT   PORTB
-extern uint8_t SPINDLE_ENABLE_PORT;
+	extern uint8_t SPINDLE_ENABLE_PORT;
 	#define SPINDLE_ENABLE_PORT_R   PORTB
     // Z Limit pin and spindle PWM/enable pin swapped to access hardware PWM on Pin 11.
     #ifdef VARIABLE_SPINDLE
