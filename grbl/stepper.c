@@ -316,12 +316,19 @@ void st_go_idle()
 // TODO: Replace direct updating of the int32 position counters in the ISR somehow. Perhaps use smaller
 // int8 variables and update position counters only when a segment completes. This can get complicated
 // with probing and homing cycles that require true real-time positions.
+int count = 0;
 ISR(TIMER1_COMPA_vect)
 {
   if (busy) { return; } // The busy-flag is used to avoid reentering this interrupt
   if((SPINDLE_ENABLE_PORT & (1 << SPINDLE_ENABLE_BIT)) != 0){
-	  SPINDLE_ENABLE_PORT_R |= (SPINDLE_ENABLE_PORT);
+	  if(FAST_SPINDLE_FLAG == 1){
+		  SPINDLE_ENABLE_PORT_R |= (SPINDLE_ENABLE_PORT);
+	  }
+	  if(count % 100 == 0){
+		  SPINDLE_ENABLE_PORT_R |= (SPINDLE_ENABLE_PORT);
+	  }
   }
+  count++;
   // Set the direction pins a couple of nanoseconds before we step the steppers
   DIRECTION_PORT = (DIRECTION_PORT & ~DIRECTION_MASK) | (st.dir_outbits & DIRECTION_MASK);
   #ifdef ENABLE_DUAL_AXIS

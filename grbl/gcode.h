@@ -227,7 +227,7 @@ typedef struct {
   float tool_length_offset;      // Tracks tool length offset value when enabled.
 } parser_state_t;
 extern parser_state_t gc_state;
-
+extern uint8_t FAST_SPINDLE_FLAG;
 
 typedef struct {
   uint8_t non_modal_command;

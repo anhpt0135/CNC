@@ -35,6 +35,7 @@
 // Declare gc extern struct
 parser_state_t gc_state;
 parser_block_t gc_block;
+uint8_t FAST_SPINDLE_FLAG = 0;
 
 #define FAIL(status) return(status);
 
@@ -252,12 +253,16 @@ uint8_t gc_execute_line(char *line)
               default: gc_block.modal.program_flow = int_value; // Program end and reset
             }
             break;
-          case 3: case 4: case 5:
+          case 3: case 4: case 5: case 11:
             word_bit = MODAL_GROUP_M7;
             switch(int_value) {
               case 3: gc_block.modal.spindle = SPINDLE_ENABLE_CW; break;
               case 4: gc_block.modal.spindle = SPINDLE_ENABLE_CCW; break;
-              case 5: gc_block.modal.spindle = SPINDLE_DISABLE; break;
+              case 5:
+            	  gc_block.modal.spindle = SPINDLE_DISABLE;
+            	  FAST_SPINDLE_FLAG = 0;
+            	  break;
+              case 11: FAST_SPINDLE_FLAG = 1; break;//adding control the chocolate extruder
             }
             break;
           #ifdef ENABLE_M7
