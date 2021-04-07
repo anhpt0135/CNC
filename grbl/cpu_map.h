@@ -126,6 +126,14 @@
       #define SPINDLE_DIRECTION_BIT   5  // Uno Digital Pin 13 (NOTE: D13 can't be pulled-high input due to LED.)
     #endif
 
+#define EXTRUDER_ENABLE_DDR DDRB
+#define EXTRUDER_ENABLE_PORT PORTB
+#define STEP_EXTRUDER_BIT SPINDLE_ENABLE_BIT
+
+#define EXTRUDER_DIRECTION_DDR DDRB
+#define EXTRUDER_DIRECTION_PORT PORTB
+#define STEP_EXTRUDER_DIRECTION_BIT SPINDLE_DIRECTION_BIT
+
     // Variable spindle configuration below. Do not change unless you know what you are doing.
     // NOTE: Only used when variable spindle is enabled.
     #define SPINDLE_PWM_MAX_VALUE     255 // Don't change. 328p fast PWM mode fixes top value as 255.
