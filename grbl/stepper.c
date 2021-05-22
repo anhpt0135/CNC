@@ -339,6 +339,10 @@ ISR(TIMER1_COMPA_vect)
     #endif
   #endif
 
+  if(spindle_get_state() != SPINDLE_STATE_DISABLE){
+	  extruder_start();
+  }
+
   // Enable step pulse reset timer so that The Stepper Port Reset Interrupt can reset the signal after
   // exactly settings.pulse_microseconds microseconds, independent of the main Timer1 prescaler.
   TCNT0 = st.step_pulse_time; // Reload Timer0 counter
@@ -490,6 +494,11 @@ ISR(TIMER0_OVF_vect)
 {
   // Reset stepping pins (leave the direction pins)
   STEP_PORT = (STEP_PORT & ~STEP_MASK) | (step_port_invert_mask & STEP_MASK);
+
+  if(spindle_get_state() != SPINDLE_STATE_DISABLE){
+	  extruder_stop();
+  }
+
   #ifdef ENABLE_DUAL_AXIS
     STEP_PORT_DUAL = (STEP_PORT_DUAL & ~STEP_MASK_DUAL) | (step_port_invert_mask_dual & STEP_MASK_DUAL);
   #endif

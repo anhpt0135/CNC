@@ -923,9 +923,11 @@ uint8_t gc_execute_line(char *line)
           } else { spindle_sync(gc_state.modal.spindle, gc_block.values.s); }
         }
       #else
-        spindle_sync(gc_state.modal.spindle, 0.0);
+        //spindle_sync(gc_state.modal.spindle, 0.0);
+        spindle_sync(gc_state.modal.spindle, gc_block.values.s);
       #endif
     }
+    spindle_sync(gc_state.modal.spindle, gc_block.values.s);
     gc_state.spindle_speed = gc_block.values.s; // Update spindle speed state.
   }
   // NOTE: Pass zero spindle speed for all restricted laser motions.

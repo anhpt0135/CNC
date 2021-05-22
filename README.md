@@ -28,3 +28,20 @@ To control the extruder, we use PORTB:
   #define STEPPERS_DISABLE_PORT   PORTB
   #define STEPPERS_DISABLE_BIT    0  // Uno Digital Pin 8
   #define STEPPERS_DISABLE_MASK   (1<<STEPPERS_DISABLE_BIT)
+  
+  ISR1 --> Set Outbit
+  ISR0 --> reset Outbit
+  
+ F: Feet rate  (mm/min)
+ S: Spindle speed (rpm) --> gc_block.value.s --> gc_state.spindle_speed --> 
+ Spindle state:
+ 
+ M3: SPINDLE_ENABLE_CW  --> gc_state.modal.spindle --> _spindle_set_state(state); spindle_get_state().
+ M4: SPINDLE_ENABLE_CCW
+ M5: SPINDLE_DISABLE
+ 
+ Calculate number of step/mm for extruder from sys.extruder_speed --> ISR1 and ISR0
+ 
+ 
+ 
+ 

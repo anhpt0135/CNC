@@ -115,6 +115,14 @@ void spindle_stop()
   #endif
 }
 
+void extruder_start(void){
+	SPINDLE_ENABLE_PORT |= (1<<SPINDLE_ENABLE_BIT);//Set pin to high
+}
+
+void extruder_stop(void){
+	SPINDLE_ENABLE_PORT &= ~(1<<SPINDLE_ENABLE_BIT); // Set pin to low
+}
+
 
 #ifdef VARIABLE_SPINDLE
   // Sets spindle speed PWM output and enable pin, if configured. Called by spindle_set_state()
@@ -270,6 +278,24 @@ void spindle_stop()
   sys.report_ovr_counter = 0; // Set to report change immediately
 }
 
+void __spindle_set_state(uint8_t state, int rpm) {
+	if (sys.abort) {
+		return;
+	} // Block during abort.
+	if (state == SPINDLE_DISABLE) { // Halt or set spindle direction and rpm.
+		spindle_stop();
+	} else {
+#if !defined(USE_SPINDLE_DIR_AS_ENABLE_PIN) && !defined(ENABLE_DUAL_AXIS)
+		if (state == SPINDLE_ENABLE_CW) {
+			SPINDLE_DIRECTION_PORT &= ~(1 << SPINDLE_DIRECTION_BIT);
+		} else {
+			SPINDLE_DIRECTION_PORT |= (1 << SPINDLE_DIRECTION_BIT);
+		}
+
+		sys.extruder_speed = rpm;
+#endif
+	}
+}
 
 // G-code parser entry-point for setting spindle state. Forces a planner buffer sync and bails 
 // if an abort or check-mode is active.
@@ -286,5 +312,12 @@ void spindle_stop()
     if (sys.state == STATE_CHECK_MODE) { return; }
     protocol_buffer_synchronize(); // Empty planner buffer to ensure spindle is set when programmed.
     _spindle_set_state(state);
+  }
+
+  void __spindle_sync(uint8_t state, float rmp)
+  {
+    if (sys.state == STATE_CHECK_MODE) { return; }
+    protocol_buffer_synchronize(); // Empty planner buffer to ensure spindle is set when programmed.
+    __spindle_set_state(state, rmp);
   }
 #endif

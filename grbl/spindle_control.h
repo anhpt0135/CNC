@@ -57,17 +57,23 @@ uint8_t spindle_get_state();
 #else
   
   // Called by g-code parser when setting spindle state and requires a buffer sync.
-  #define spindle_sync(state, rpm) _spindle_sync(state)
+  //#define spindle_sync(state, rpm) _spindle_sync(state)
+#define spindle_sync(state, rpm) __spindle_sync(state, rpm)
   void _spindle_sync(uint8_t state);
+  void __spindle_sync(uint8_t state, float rmp);
 
   // Sets spindle running state with direction and enable.
-  #define spindle_set_state(state, rpm) _spindle_set_state(state)
+  #define spindle_set_state(state, rpm) __spindle_set_state(state, rpm)
   void _spindle_set_state(uint8_t state);
+  void __spindle_set_state(uint8_t state, int rpm);
 
 #endif
 
 // Stop and start spindle routines. Called by all spindle routines and stepper ISR.
 void spindle_stop();
+
+void extruder_start(void);
+void extruder_stop(void);
 
 
 #endif
